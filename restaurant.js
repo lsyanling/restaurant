@@ -6,14 +6,20 @@ function ClassGame() {
     this.Money = 500;
     this.TimeFlag = false;
     this.names = []; //名字集
+    this.foodNames = []; //餐食集
     this.chef = []; //餐厅厨师
     this.dining = [0, 0, 0, 0]; //正在用餐
     this.customer = []; //顾客集
     this.queue = []; //排队
     this.headPortrait = []; //头像
-    this.mainCourse = []; //主菜
-    this.coldDish = []; //凉菜
-    this.drink = []; //饮料
+
+    //表示菜在allFood中的索引范围
+    this.mainCourse = [3, 5]; //主菜
+    this.coldDish = [0, 2]; //凉菜
+    this.drink = [6, 8]; //饮料
+
+    //所有菜，便于查找
+    this.allFood = [];
 
     //初始化
     this.Initialize = function() {
@@ -24,11 +30,15 @@ function ClassGame() {
         this.TimeFlag = true;
         this.chef = [];
         this.customer = [];
+        this.allFood = [];
+
         this.names = ['bie', 'weile', 'naisi', 'buhuiba', 'boqi', 'weige', 'baba', 'zhutou', 'html', 'ltsb', '???', 'bb', 'xp', 'wc', 'jj', 'bulai', 'baijiazi', 'kes', 'hao!'];
-        this.mainCourse = ['fuck baidu', 'sb baidu', 'baidu ml'];
-        this.coldDish = ['爆炒baidu', '清蒸baidu', '凉拌baidu'];
-        this.drink = ['可口baidu', '百事baidu', 'baidu快线'];
+
+        this.foodNames = ['fuck baidu', 'sb baidu', 'baidu ml', '爆炒baidu', '清蒸baidu', '凉拌baidu', '可口baidu', '百事baidu', 'baidu快线'];
+
+
         CreateCustomer();
+        CreateFood();
         BindAllElement();
         AddListener();
         return true;
@@ -181,7 +191,25 @@ function ClassGame() {
         console.log("一个客人" + this.queue[this.queue.length - 1].name +
             "进来了");
 
+        /*
+        setTimeout(function() {
+            newGame.leaveFromQueue2(newGame.queue, newGame.customer[i]);
+        }, 40000, newGame.queue, newGame.customer[i])
+        */
+
         return true;
+    };
+
+    //顾客从队列离开2 入口参数：队列，顾客对象
+    this.leaveFromQueue2 = function(queue, customer) {
+        if (customer.position === 'queue') {
+            let i = findIndexByValue(queue, customer);
+            customer.position = 'out';
+            console.log("顾客" + customer.name + "等久了走掉了");
+            queue.splice(i, 1);
+            return true;
+        }
+        return false;
     };
 
     //顾客从队列离开
@@ -191,12 +219,12 @@ function ClassGame() {
             this.queue[i].patient -= 1;
             if (this.queue[i].position === 'queue' && this.queue[i].patient <= 0) {
                 this.queue[i].position = 'out';
-                this.queue.splice(i, 1);
                 console.log("顾客" + this.queue[i].name + "等久了走掉了");
-                break;
+                this.queue.splice(i, 1);
+                return true;
             }
         }
-        return true;
+        return false;
     };
 
     //顾客就座 出口参数：第i+1个就座的顾客
@@ -239,50 +267,25 @@ function ClassGame() {
 
         //决定顾客点菜数目
         let j = Math.random() * 10;
-        Math.floor(j);
-        j %= 3; //最多点3个菜
+        j = Math.floor(j);
 
-        let main = 0;
-        let cold = 0;
-        let drinkN = 0;
+        //最多点3个菜
+        j %= 3;
+        j++;
 
         //这个选择是真滴sb
         for (let k = 0; k < j; k++) {
-            let m = Math.random() * 10;
+            let m = Math.random() * 100;
             m = Math.floor(m);
-            m %= 3;
-            console.log(m);
-            switch (m) {
-                case 0: //凉菜
-                    {
-                        let n = Math.random() * 10;
-                        n = Math.floor(n);
-                        n %= this.coldDish.length;
-                        this.dining[i].food.push(this.coldDish[n]);
-                        break;
-                    }
-                case 1: //主菜
-                    {
-                        let n = Math.random() * 10;
-                        n = Math.floor(n);
-                        n %= this.mainCourse.length;
-                        this.dining[i].food.push(this.mainCourse[n]);
-                        break;
-                    }
-                case 2: //饮品
-                    {
-                        let n = Math.random() * 10;
-                        n = Math.floor(n);
-                        n %= this.drink.length;
-                        this.dining[i].food.push(this.drink[n]);
-                        break;
-                    }
-                default:
-                    break;
-            }
-            for (let n = 0; n < this.dining[i].food.length; n++)
-                this.dining[i].price += this.dining[i].food[n].price;
+            m %= this.allFood.length;
+
+            this.dining[i].food.push(this.allFood[m]);
         }
+
+        //算钱
+        for (let n = 0; n < this.dining[i].food.length; n++)
+            this.dining[i].price += this.dining[i].food[n].price;
+
         return true;
     }
 
@@ -349,7 +352,6 @@ function ClassFood(name, type, cost, price) {
     this.price = price;
 }
 
-
 //构造游戏对象
 let newGame = new ClassGame();
 
@@ -385,6 +387,17 @@ function TimeKeeping(game) {
     }
 }
 
+//由数组元素值求索引
+function findIndexByValue(list, value) {
+    let l = list.length;
+    let i = 0;
+    for (; i < l; i++) {
+        if (list[i] === value)
+            return i;
+    }
+    return false;
+}
+
 //迫不得已用死循环来延迟
 function sleep(needms) {
     for (let nowTime = Date.now(); Date.now() - nowTime <= needms;);
@@ -402,6 +415,20 @@ newGame.recruitChef();
 function CreateCustomer() {
     for (let i = 0; i < newGame.names.length; i++) {
         newGame.customer.push(new ClassCustomer(newGame.names[i], null));
+    }
+}
+
+//创建食物对象
+function CreateFood() {
+    let i = 0;
+    for (; i <= newGame.coldDish[1]; i++) {
+        newGame.allFood.push(new ClassFood(newGame.foodNames[i], "coldDish", 10, 20));
+    }
+    for (; i <= newGame.mainCourse[1]; i++) {
+        newGame.allFood.push(new ClassFood(newGame.foodNames[i], "mainCourse", 20, 40));
+    }
+    for (; i <= newGame.drink[1]; i++) {
+        newGame.allFood.push(new ClassFood(newGame.foodNames[i], "drink", 5, 10));
     }
 }
 
@@ -477,11 +504,14 @@ function AddListener() {
                 console.log(newGame.dining[i]);
 
                 //在菜单上打勾
-                let theindex = newGame.coldDish.findIndex(newGame.dining[i].food[0]);
+                let j = 0;
+                let indexInAllFood;
+                for (; j < newGame.dining[i].food.length; j++) {
+                    indexInAllFood = findIndexByValue(newGame.allFood, newGame.dining[i].food[j]);
+                    sleep(500);
+                    FoodMenuCheckbox[indexInAllFood]["checked"] = "checked";
 
-                console.log(theindex);
-
-
+                }
             }
         })
     }
