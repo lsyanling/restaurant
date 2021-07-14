@@ -1,0 +1,145 @@
+body {
+    background-image: url('http://127.0.0.1:8088/chef/backgroun.jpg');
+    background-repeat: no-repeat;
+    background-size: 400px 600px;
+    background-position: center top;
+}
+
+h3 {
+    text-align: center;
+}
+
+.box {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.start {
+    position: relative;
+    margin: auto;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99999;
+    width: 350px;
+    height: 250px;
+    border: 7px solid white;
+    background-color: yellow;
+    border-radius: 30px;
+    text-align: left;
+    display: block;
+}
+
+.startgame {
+    position: relative;
+    margin: auto;
+    top: 20px;
+    bottom: 0;
+    left: 75px;
+    right: 0;
+    width: 200px;
+    height: 30px;
+    border: 5px solid #8AC007;
+    background-color: yellow;
+    border-radius: 30px;
+    text-align: center;
+}
+
+.date {
+    position: relative;
+    margin: auto;
+    left: -140px;
+    top: 0px;
+    right: 0 px;
+    bottom: 460px;
+    border-radius: 30px;
+    border: 5px solid #8AC007;
+    padding: 15px;
+    width: 60px;
+    height: 5px;
+    font-size: 1em;
+    text-align: center;
+    background-color: yellow;
+    color: black;
+}
+
+.money {
+    position: relative;
+    margin: auto;
+    left: 90px;
+    right: 0px;
+    top: -45px;
+    bottom: 0 px;
+    border-radius: 30px;
+    border: 5px solid #8AC007;
+    padding: 15px;
+    width: 160px;
+    height: 5px;
+    font-size: 1em;
+    text-align: right;
+    background-color: yellow;
+    color: black;
+}
+
+.chef {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: -380px;
+    bottom: 0;
+    border-radius: 15px;
+    border: 7px solid white;
+    width: 380px;
+    height: 90px;
+    background-color: yellow;
+    color: black;
+    display: flex;
+}
+
+.chef_head {
+    position: relative;
+    width: 150px;
+    height: 70px;
+    margin-left: 25px;
+    margin-right: 25px;
+    margin-top: 3px;
+    background-color: lightgray;
+    border-radius: 100px;
+    border: 3px solid white;
+}
+
+.client {
+    position: absolute;
+    margin: auto;
+    left: 0;
+    right: 0;
+    top: 200px;
+    bottom: 0;
+    border-radius: 15px;
+    border: 7px solid white;
+    width: 380px;
+    height: 200px;
+    background-color: orange;
+    color: black;
+}
+
+.client_flex {
+    display: flex;
+}
+
+.client_head {
+    position: relative;
+    width: 200px;
+    height: 90px;
+    margin-left: 45px;
+    margin-right: 45px;
+    margin-top: 3px;
+    background-color: lightgray;
+    border-radius: 300px;
+    border: 3px solid white;
+}
