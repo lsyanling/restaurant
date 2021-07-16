@@ -5,7 +5,7 @@ class ClassGame {
         this.Time = 0;
         this.Week = 1;
         this.Day = 1;
-        this.Money = 500;
+        this.Money = 5000;
         this.TimeFlag = false;
 
         //顾客名字集
@@ -109,8 +109,6 @@ class ClassGame {
 
     //资金变动：解雇厨师
     Fire(chef) {
-        if (this.Money < Math.ceil(chef.weekWorkTime / 7 * chef.salary) + chef.salary * 7)
-            return false;
         this.Salary(chef);
         this.Money -= chef.salary * 7;
         return true;
@@ -122,6 +120,12 @@ class ClassGame {
         //厨师工作时间
         for (let i = 0; i < this.chef.length; i++)
             this.chef[i].weekWorkTime++;
+
+        //生气顾客离开
+        for (let i = 0; i < this.dining.length; i++) {
+            if (this.dining[i] && this.dining[i].position === 'angry')
+                this.appeaseAngry(this.dining[i], i);
+        }
 
         //顾客就餐刷新
         for (let i = 0; i < this.customer.length; i++)
@@ -154,31 +158,31 @@ class ClassGame {
 
     //招聘厨师
     recruitChef() {
-        if (this.chef.length === 6)
+        if (this.chef.length >= 6)
             return false;
         this.chef.push(this.allChef[0]);
         this.allChef.shift();
         return true;
     };
 
-    //解雇厨师
-    fireChef() {
+    //解雇厨师 入口参数：第i个厨师
+    fireChef(i) {
         //不能一个也没有啊
         if (this.chef.length === 1)
             return false;
 
-        if (!this.Fire(this.chef[this.chef.length - 1]))
+        if (this.Money < Math.ceil(this.chef[i].weekWorkTime / 7 * this.chef[i].salary) + this.chef[i].salary * 7)
             return false;
 
         //资金变动
-        this.Fire(this.chef[this.chef.length - 1]);
+        this.Fire(this.chef[i]);
 
         //厨师对象初始化
-        this.chef[this.chef.length - 1].weekWorkTime = 0;
-        this.chef[this.chef.length - 1].allWorkTime = 0;
+        this.chef[i].weekWorkTime = 0;
+        this.chef[i].allWorkTime = 0;
 
-        this.allChef.push(this.chef[this.chef.length - 1]);
-        this.chef.splice(this.chef.length - 1, 1);
+        this.allChef.push(this.chef[i]);
+        this.chef.splice(i, 1);
 
         return true;
     };
@@ -227,7 +231,7 @@ class ClassGame {
             this.queue[i].patient -= 1;
 
             //耐心为0
-            if (this.queue[i].position === 'queue' && this.queue[i].patient === 0) {
+            if (this.queue[i].position === 'queue' && this.queue[i].patient <= 0) {
 
                 //顾客位置变更
                 this.queue[i].position = 'out';
@@ -259,7 +263,7 @@ class ClassGame {
         //判断就座位置
         i = 0;
         for (; i < this.dining.length; i++)
-            if (this.dining[i] === 0)
+            if (!this.dining[i])
                 break;
         this.dining[i] = this.queue.shift();
 
@@ -428,9 +432,8 @@ class ClassGame {
                 if (this.dining[i].position === 'seat') {
                     console.log(this.dining[i]);
                     //等的菜已经在做了
-                    if (this.dining[i].food.length && this.dining[i].food[0].position[i] === 'ing') {
+                    if (this.dining[i].food.length && (this.dining[i].food[0].position[i] === 'ing' || this.dining[i].food[0].position[i] === 'complete')) {
                         continue;
-
                     }
 
                     //知道谁在等菜了，跳出去
@@ -513,7 +516,7 @@ class ClassGame {
                     if (this.chef[i].cookingDish[0].position[j] === 'ing') {
                         this.chef[i].cookingDish[0].needTime[j] -= 1;
                         //做好了
-                        if (this.chef[i].cookingDish[0].needTime[j] === 0) {
+                        if (this.chef[i].cookingDish[0].needTime[j] <= 0) {
 
                             //变更菜的状态
                             this.chef[i].cookingDish[0].position[j] = 'ed';
@@ -554,22 +557,61 @@ class ClassGame {
     //加速做菜和上菜 入口参数：厨师对象
     dishUp(chef) {
 
+        //在座位数组里根据顾客对象找位置
+        let indexSeat = findIndexByValue(this.dining, chef.cookingDish[1]);
+
         //点击厨师加速做菜
         if (chef.position === 'busy') {
-            chef.cookingDish[0].needTime -= 1;
+            chef.cookingDish[0].needTime[indexSeat] -= 1;
             return true;
         }
 
         //如果菜做好了
         if (chef.position === 'complete') {
 
+            //设置厨师状态
+            chef.position = 'free';
+
             //设置餐食状态
-            chef.cookingDish[0].position = 'eating';
+            chef.cookingDish[0].position[indexSeat] = 'eating';
 
             //设置顾客状态
             chef.cookingDish[1].position = 'eating';
             chef.cookingDish[1].haveEat = true;
             chef.cookingDish[1].lastEat = chef.cookingDish[0];
+
+            //顾客food数组首位shift
+            chef.cookingDish[1].food.shift();
+
+            //重置顾客耐心
+            if (chef.cookingDish[1].food.length) {
+                switch (chef.cookingDish[1].food[0].type) {
+                    case 'coldDish':
+                        {
+                            chef.cookingDish[1].patient = 30;
+                            break
+                        }
+                    case 'mainCourse':
+                        {
+                            chef.cookingDish[1].patient = 40;
+                            break
+                        }
+                    case 'drink':
+                        {
+                            chef.cookingDish[1].patient = 25;
+                            break;
+
+                        }
+                    default:
+                        break;
+                }
+            } else {
+                chef.cookingDish[1].patient = 40;
+            }
+
+            //该菜从readyFood弹出
+            let index = findIndexByValue(this.readyFood, chef.cookingDish[0]);
+            this.readyFood.splice(index, 1);
 
             //根据菜的类型设置吃菜速度
             switch (chef.cookingDish[0].type) {
@@ -591,6 +633,9 @@ class ClassGame {
                 default:
                     break;
             }
+
+            //删除厨师的cookingDish
+            chef.cookingDish = [0, 0];
         }
     }
 
@@ -599,20 +644,51 @@ class ClassGame {
         let i = 0;
         for (i = 0; i < this.dining.length; i++) {
             //座位上有人
+
             if (this.dining[i]) {
+
                 //如果在吃的话
                 if (this.dining[i].position === 'eating') {
+
                     //speed实际是要吃完还需的时间
                     this.dining[i].eatSpeed -= 1;
+
                     //如果吃完了
-                    if (this.dining[i].eatSpeed === 0) {
+                    if (this.dining[i].eatSpeed <= 0) {
+
                         //根据顾客的food数组设置顾客状态
                         if (!this.dining[i].food.length) {
+
                             //状态为结账
                             this.dining[i].position = 'checkOut';
+
+                            //设置顾客的eatSpeed
+                            this.dining[i].eatSpeed = 20;
                         } else {
+
                             //状态为等餐
                             this.dining[i].position = 'seat';
+
+                            //设置顾客的eatSpeed
+                            switch (this.dining[i].food[0].type) {
+                                case 'coldDish':
+                                    {
+                                        this.dining[i].eatSpeed = 10;
+                                        break;
+                                    }
+                                case 'mainCourse':
+                                    {
+                                        this.dining[i].eatSpeed = 20;
+                                        break
+                                    }
+                                case 'drink':
+                                    {
+                                        this.dining[i].eatSpeed = 10;
+                                        break;
+                                    }
+                                default:
+                                    break;
+                            }
                         }
                         //设置对应的餐食状态
                         this.dining[i].lastEat.position[i] = 'none';
@@ -875,6 +951,11 @@ function BindAllElement() {
     //绑定不吃了按钮
     notEat = document.getElementById("not-eat");
 
+    //绑定招聘厨师界面
+    addChefWindow[0] = document.getElementById("add-chef");
+    addChefWindow[1] = document.getElementById("add-yes");
+    addChefWindow[2] = document.getElementById("add-no");
+
     //绑定解雇厨师界面
     fireChefWindow[0] = document.getElementById("fire-chef");
     fireChefWindow[1] = document.getElementById("fire-yes");
@@ -888,24 +969,72 @@ function AddListener() {
     //厨师按钮添加监听
     for (let i = 0; i < 6; i++) {
         buttonChef[i].addEventListener("click", function() {
-            //该按钮为招聘厨师
-            if (i === newGame.chef.length) {
 
-                //如果招聘成功
-                if (newGame.recruitChef()) {
-                    //该按钮className改为显示
-                    buttonChef[i]["className"] = "chef-on";
+            //首先判断一共有几个厨师
+            let chefNumber = newGame.chef.length;
 
-                    //没下一个按钮了
-                    if (i === 5)
-                        return true;
+            //按钮标记
+            let buttonFlag;
 
-                    //后一个按钮改为招聘
-                    buttonChef[i + 1]["className"] = "chef-add";
-                    return true;
+            //如果按钮索引小于厨师数，必然是厨师
+            if (i < chefNumber)
+                buttonFlag = 'chef';
+
+            //如果按钮索引等于厨师数，必然是招聘
+            if (i === chefNumber)
+                buttonFlag = 'add';
+
+            //如果是厨师
+            if (buttonFlag === 'chef') {
+                if (newGame.chef[i].position === 'busy' || newGame.chef[i].position === 'complete') {
+                    newGame.dishUp(newGame.chef[i]);
                 }
+                //空闲的话
+                else {
+                    if (newGame.chef.length > 1) {
+
+                        //显示解雇确认窗口
+                        fireChefWindow[0].style["display"] = 'initial';
+
+                        //计时停止
+                        newGame.TimeStop();
+
+                        //隔空传参
+                        ListenerToFireChefYes = i;
+                    }
+                }
+            }
+
+            //招聘的情况
+            if (buttonFlag === 'add') {
+
+                //显示招聘确认窗口
+                addChefWindow[0].style["display"] = 'initial';
+
+                //计时停止
+                newGame.TimeStop();
+
+                //隔空传参
+                ListenerToAddChefYes = i;
 
             }
+
+            /*
+            //如果招聘成功
+            if (newGame.recruitChef()) {
+
+                //该按钮className改为显示
+                buttonChef[i]["className"] = "chef-on";
+
+                //没下一个按钮了
+                if (i === 5)
+                    return true;
+
+                //后一个按钮改为招聘
+                buttonChef[i + 1]["className"] = "chef-add";
+                return true;
+            }
+
             //最后一个厨师对应的按钮
             else if (i === newGame.chef.length - 1) {
 
@@ -921,29 +1050,27 @@ function AddListener() {
                         //隔空传参
                         ListenerToFireChefYes = i;
                     }
-
-                } else {
-                    newGame.dishUp(newGame.chef[i]);
                 }
             }
-
-
+            */
         });
     }
 
-    //确认解雇厨师添加监听
-    fireChefWindow[1].addEventListener("click", function() {
 
-        if (!newGame.fireChef()) {
-            if (newGame.chef.length !== 1)
-                console.log("钱不够");
-        }
+    //确认招聘厨师添加监听
+    addChefWindow[1].addEventListener("click", function() {
+
+        //招聘厨师
+        newGame.recruitChef();
 
         //这参数，啧
-        let i = ListenerToFireChefYes;
+        let i = ListenerToAddChefYes;
 
-        //这个按钮变为招聘
-        buttonChef[i]["className"] = "chef-add";
+        //这个按钮变为厨师
+        buttonChef[i]["className"] = "chef-on";
+
+        //隐藏招聘二次确认窗口
+        addChefWindow[0].style["display"] = 'none';
 
         //计时恢复
         newGame.TimeResume();
@@ -953,16 +1080,62 @@ function AddListener() {
             return true;
 
         //多的按钮藏起来
+        buttonChef[i + 1]["className"] = "chef-add";
+    });
+
+    //不招聘了添加监听
+    addChefWindow[2].addEventListener("click", function() {
+
+        //隐藏招聘二次确认窗口
+        addChefWindow[0].style["display"] = 'none';
+
+        //计时恢复
+        newGame.TimeResume();
+    });
+
+    //确认解雇厨师添加监听
+    fireChefWindow[1].addEventListener("click", function() {
+
+        //这参数，啧
+        let i = ListenerToFireChefYes;
+
+        if (!newGame.fireChef(i)) {
+            if (newGame.chef.length !== 1) {
+                console.log("你赔不起违约金");
+                return false;
+            }
+            console.log("你想自己炒菜？");
+            return false;
+        }
+
+        //这个按钮变为招聘
+        buttonChef[i]["className"] = "chef-add";
+
+        //计时恢复
+        newGame.TimeResume();
+
+        //隐藏解雇确认窗口
+        fireChefWindow[0].style["display"] = 'none';
+
+        console.log("解雇成功，解约支出xxx");
+
+        //没多的按钮了
+        if (i === 5)
+            return true;
+
+        //多的按钮藏起来
         buttonChef[i + 1]["className"] = "chef-none";
-    })
+    });
 
     //不解雇了添加监听
     fireChefWindow[2].addEventListener("click", function() {
+
         //隐藏解雇二次确认窗口
         fireChefWindow[0].style["display"] = 'none';
+
         //计时恢复
         newGame.TimeResume();
-    })
+    });
 
     //座位按钮添加监听
     for (let i = 0; i < 4; i++) {
@@ -1155,6 +1328,9 @@ let notEat;
 //菜单checkbox
 let FoodMenuCheckbox = [];
 
+//招聘厨师界面及其按钮
+let addChefWindow = [];
+
 //解雇厨师界面及其按钮
 let fireChefWindow = [];
 
@@ -1167,4 +1343,4 @@ document.getElementById("start-game").addEventListener("click", function() {
 let newGame = new ClassGame();
 
 //1s进行一次计时
-setInterval(TimeKeeping, 400, newGame);
+setInterval(TimeKeeping, 800, newGame);

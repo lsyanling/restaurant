@@ -24,6 +24,11 @@ body {
     background-color: green;
 }
 
+#add-chef {
+    position: absolute;
+    display: none;
+}
+
 #fire-chef {
     position: absolute;
     display: none;
