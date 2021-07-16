@@ -6,6 +6,25 @@ body {
     align-items: center;
 }
 
+.chef-none {
+    display: none;
+}
+
+.chef-on {
+    display: initial;
+}
+
 .food-menu-checkbox {
     pointer-events: none;
+}
+
+#food-menu {
+    display: none;
+    position: absolute;
+    background-color: green;
+}
+
+#fire-chef {
+    position: absolute;
+    display: none;
 }

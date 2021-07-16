@@ -2,6 +2,7 @@
 <html>
 
 <head>
+    <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="restaurant.css">
 </head>
 
@@ -16,13 +17,18 @@
             <div id='DAY'></div>
         </div>
         <div>
-            <p>毫秒：</p>
             <div id='TIMEMS'></div>
         </div>
         <div>
             <div id='MONEY'></div>
         </div>
         <div><button id='start-game'>开始游戏</button></div>
+        <div><button id='chef1' class="chef-one">厨师1</button></div>
+        <div><button id='chef2' class="chef-add">厨师2</button></div>
+        <div><button id='chef3' class="chef-none">厨师3</button></div>
+        <div><button id='chef4' class="chef-none">厨师4</button></div>
+        <div><button id='chef5' class="chef-none">厨师5</button></div>
+        <div><button id='chef6' class="chef-none">厨师6</button></div>
         <div><button id='seat1'>座位1</button></div>
         <div><button id='seat2'>座位2</button></div>
         <div><button id='seat3'>座位3</button></div>
@@ -34,21 +40,28 @@
         <div><button id='queue5'>队列5</button></div>
         <div><button id='queue6'>队列6</button></div>
     </div>
-    <div>
-        <p>菜单</p>
-        <p>凉菜3选1</p>
+    <div id="food-menu">
+        <p><span id="order-name"></span>正在点菜，已点<span id="order-price"></span>元的菜</p>
+        <p>凉菜（三选一，可不点）</p>
         <div id='cold-dish1'>fuck baidu <input type="checkbox" id="fuck-baidu-checkbox" class="food-menu-checkbox"> </div>
         <div id='cold-dish2'>sb baidu <input type="checkbox" id="sb-baidu-checkbox" class="food-menu-checkbox"> </div>
         <div id='cold-dish3'>baidu meile <input type="checkbox" id="baidu-meile-checkbox" class="food-menu-checkbox"> </div>
-        <p>主菜3选1</p>
+        <p>主菜（三选一，必点）</p>
         <div id='main-course1'>爆炒 baidu <input type="checkbox" id="baochao-baidu-checkbox" class="food-menu-checkbox"> </div>
         <div id='main-course2'>清蒸 baidu <input type="checkbox" id="fuck baidu checkbox" class="food-menu-checkbox"> </div>
         <div id='main-course3'>凉拌 baidu <input type="checkbox" id="fuck baidu checkbox" class="food-menu-checkbox"> </div>
-        <p>饮品3选1</p>
+        <p>饮品（三选一，可不点）</p>
         <div id='drink1'>可口 baidu <input type="checkbox" id="fuck baidu checkbox" class="food-menu-checkbox"> </div>
         <div id='drink2'>百事 baidu <input type="checkbox" id="fuck baidu checkbox" class="food-menu-checkbox"> </div>
         <div id='drink3'>baidu 快线 <input type="checkbox" id="fuck baidu checkbox" class="food-menu-checkbox"> </div>
+        <button id="order-ok">OK</button><button id="not-eat">Not Eat</button>
     </div>
+
+    <div id="fire-chef">
+        <button id="fire-yes">确认解雇</button>
+        <button id="fire-no">不解雇</button>
+    </div>
+
     <script src="restaurant.js"></script>
 </body>
 
