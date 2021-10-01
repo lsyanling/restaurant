@@ -1,35 +1,764 @@
+/*
+顺序：display，position，width，height，overflow，flex-direction，align，justify，border，background，solid，width，color，radius
+*/
+
 body {
-    height: 100vh;
     display: flex;
-    flex-direction: row;
-    justify-content: center;
+    width: 100%;
+    height: 100vh;
     align-items: center;
+    background-image: url(restaurant/dose-juice-sTPy-oeA3h0-unsplash.jpg);
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
-.chef-none {
+#black-shadow {
     display: none;
-}
-
-.chef-on {
-    display: initial;
-}
-
-.food-menu-checkbox {
-    pointer-events: none;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(88, 88, 88, 0.5);
+    z-index: 1;
 }
 
 #food-menu {
     display: none;
     position: absolute;
-    background-color: green;
+    flex-direction: column;
+    align-items: center;
+    box-sizing: border-box;
+    width: 96%;
+    height: 81%;
+    border-style: solid;
+    border-width: 4px;
+    border-color: white;
+    border-radius: 17px;
+    background-color: rgb(255, 217, 112);
+    z-index: 2;
 }
 
-#add-chef {
+#menu-board {
+    display: flex;
     position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    box-sizing: border-box;
+    width: 80%;
+    height: 70%;
+    top: 15%;
+    font-size: 13px;
+    color: rgb(151, 103, 0);
+    border-style: solid;
+    border-width: 4px;
+    border-color: rgb(151, 103, 0);
+    border-radius: 17px;
+    background-color: white;
+}
+
+.all-dishes {
+    position: relative;
+    left: -10%
+}
+
+.dishes {
+    margin: 0px;
+}
+
+.order-two-choice {
+    display: flex;
+    position: relative;
+    width: 100%;
+    height: 8%;
+    top: 87%;
+    align-items: center;
+    justify-content: space-around;
+    margin: 2%;
+}
+
+#order-yes {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+#order-no {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 30%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+#order-message {
+    position: absolute;
+    width: 60%;
+    height: 20%;
+    top: 5%;
+    left: 35%;
+}
+
+#order-img {
+    position: absolute;
+    top: -5%;
+    left: 5%;
+}
+
+#start-window {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    box-sizing: border-box;
+    width: 96%;
+    height: 30%;
+    top: 30%;
+    border-style: solid;
+    border-width: 4px;
+    border-color: white;
+    border-radius: 17px;
+    background-color: rgb(255, 217, 112);
+    z-index: 2;
+}
+
+#start-game {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 90%;
+    height: 22%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 30px;
+    margin-top: 10px;
+}
+
+.recruit-window {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    box-sizing: border-box;
+    width: 96%;
+    height: 30%;
+    top: 30%;
+    border-style: solid;
+    border-width: 4px;
+    border-color: white;
+    border-radius: 17px;
+    background-color: rgb(255, 217, 112);
+    z-index: 2;
+}
+
+#recruit-yes {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+#recruit-no {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 30%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+.fire-window {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    overflow: hidden;
+    align-items: center;
+    box-sizing: border-box;
+    width: 96%;
+    height: 30%;
+    top: 30%;
+    border-style: solid;
+    border-width: 4px;
+    border-color: white;
+    border-radius: 17px;
+    background-color: rgb(255, 217, 112);
+    z-index: 2;
+}
+
+.head {
+    font-size: 25px;
+    margin: 2%;
+}
+
+.text {
+    margin: 1% 5% 1% 5%;
+}
+
+.two-choice {
+    display: flex;
+    width: 100%;
+    height: 20%;
+    align-items: center;
+    justify-content: space-around;
+    margin: 2%;
+}
+
+#fire-yes {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 50%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+#fire-no {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 30%;
+    height: 100%;
+    color: rgb(85, 73, 5);
+    font-size: 20px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 25px;
+}
+
+#time {
+    display: flex;
+    position: absolute;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;
+    width: 25%;
+    height: 4%;
+    top: 2%;
+    left: 2%;
+    color: rgb(85, 73, 5);
+    font-size: 14px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 20px;
+    background-color: rgb(255, 217, 112);
+}
+
+#money {
+    display: flex;
+    position: absolute;
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+    width: 50%;
+    height: 4%;
+    top: 2%;
+    right: 2%;
+    color: rgb(85, 73, 5);
+    font-size: 14px;
+    border-style: solid;
+    border-width: 5px;
+    border-color: rgb(122, 106, 12);
+    border-radius: 20px;
+    background-color: rgb(255, 217, 112);
+}
+
+.shadow-time-money {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    top: 0%;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.shadow-cook-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 0px;
+    height: 20px;
+    top: 60px;
+    left: 0%;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.shadow-seat-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 0px;
+    height: 20px;
+    left: 60px;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+.shadow-queue-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 0px;
+    height: 20px;
+    top: 60px;
+    left: 0%;
+    background-color: rgba(255, 255, 255, 0.4);
+}
+
+#money-value {
+    position: absolute;
+    right: 10%;
+}
+
+#div-chef-block {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 100px);
+    position: absolute;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    height: 36%;
+    width: 96%;
+    top: 10%;
+    border-style: solid;
+    border-width: 5px;
+    border-color: white;
+    background-color: rgb(255, 217, 112);
+    border-radius: 15px;
+}
+
+#div-customer-block {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, 135px);
+    position: absolute;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    height: 36%;
+    width: 96%;
+    top: 50%;
+    border-style: solid;
+    border-width: 5px;
+    border-color: white;
+    background-color: rgb(255, 166, 0);
+    border-radius: 15px;
+}
+
+#div-queue-block {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: space-around;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    height: 18%;
+    width: 96%;
+    top: 78%;
+}
+
+.div-chef {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    height: 80px;
+    width: 80px;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 50%;
+    border-color: white;
+    margin: 10px;
+}
+
+.div-chef-busy {
+    background-color: rgb(255, 115, 0);
+}
+
+.div-chef-complete {
+    background-color: rgb(128, 74, 255);
+}
+
+.div-chef-free {
+    background-color: rgb(175, 175, 175);
+}
+
+.chef-img-block {
+    overflow: hidden;
+}
+
+.chef-filter {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: -1000px;
+    filter: drop-shadow(1000px 0px white);
+}
+
+.chef-img {
+    width: 100%;
+    height: 100%;
+}
+
+.shadow-chef-customer {
+    position: absolute;
+    width: 50%;
+    height: 100%;
+    border-radius: 50% 0 0 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.chef-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 72px;
+    height: 20px;
+    top: 60px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    border-style: solid;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 2px;
+}
+
+.cooking-bar {
+    background-color: rgb(255, 115, 0);
+}
+
+.complete-bar {
+    background-color: rgb(169, 119, 250);
+}
+
+.add-block {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.delete-block {
+    display: flex;
+    position: absolute;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    left: 80%;
+    transform: translate(-50%, -50%);
+    transform: rotate(45deg);
+}
+
+.multiply-row {
+    position: absolute;
+    width: 20px;
+    height: 5px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(194, 160, 49);
+}
+
+.multiply-column {
+    position: absolute;
+    width: 5px;
+    height: 20px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(194, 160, 49);
+}
+
+.div-complete {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    right: 50%;
+    top: 30%;
+}
+
+.img-complete {
+    width: 100%;
+    height: 100%;
+}
+
+.block-hidden {
     display: none;
 }
 
-#fire-chef {
-    position: absolute;
-    display: none;
+.div-seat {
+    display: flex;
+    position: relative;
+    box-sizing: border-box;
+    height: 80px;
+    width: 80px;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 50%;
+    border-color: white;
+    margin: 10px;
+    background-color: rgb(175, 175, 175);
 }
+
+.div-seat-none {
+    background-color: rgb(175, 175, 175);
+}
+
+.div-seat-eating {
+    background-color: rgb(255, 115, 0);
+}
+
+.div-seat-wait {
+    background-color: rgb(233, 3, 3);
+}
+
+.div-seat-angry {
+    background-color: rgb(121, 0, 0);
+}
+
+.div-seat-check-out {
+    background-color: rgb(15, 189, 29);
+}
+
+.customer-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 72px;
+    height: 20px;
+    left: 60px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    border-style: solid;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 2px;
+}
+
+.bar0 {
+    top: 0px;
+}
+
+.bar1 {
+    top: 25px;
+}
+
+.bar2 {
+    top: 50px;
+}
+
+.customer-bar-line {
+    position: absolute;
+    width: 60px;
+    height: 1px;
+    left: 66px;
+    background-color: white;
+}
+
+.bar0-line {
+    top: 10px;
+}
+
+.bar1-line {
+    top: 35px;
+}
+
+.bar2-line {
+    top: 60px;
+}
+
+.wait-bar {
+    background-color: rgb(233, 3, 3);
+}
+
+.dish-up {
+    position: absolute;
+    box-sizing: border-box;
+    width: 21px;
+    height: 21px;
+    left: 132px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 50%;
+    background-color: red;
+}
+
+.img-dish-up {
+    width: 100%;
+    height: 100%;
+}
+
+#dish-up00,
+#dish-up10,
+#dish-up20,
+#dish-up30 {
+    top: -1px;
+}
+
+#dish-up01,
+#dish-up11,
+#dish-up21,
+#dish-up31 {
+    top: 25px;
+}
+
+#dish-up02,
+#dish-up12,
+#dish-up22,
+#dish-up32 {
+    top: 51px;
+}
+
+.eating-bar {
+    background-color: rgb(255, 115, 0);
+}
+
+.not-eat-bar {
+    background-color: rgb(97, 97, 97);
+}
+
+.check-out-bar {
+    background-color: rgb(15, 189, 29);
+}
+
+.div-appease {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    right: 50%;
+    top: 50%;
+}
+
+.img-appease {
+    width: 100%;
+    height: 100%;
+}
+
+.div-check {
+    position: absolute;
+    width: 80%;
+    height: 80%;
+    right: 50%;
+    top: 50%;
+}
+
+.img-check {
+    width: 100%;
+    height: 100%;
+}
+
+.div-customer {
+    position: absolute;
+    box-sizing: border-box;
+    height: 80px;
+    width: 80px;
+    border-style: solid;
+    border-width: 4px;
+    border-radius: 50%;
+    border-color: white;
+    background-color: rgb(0, 110, 255);
+}
+
+.customer-img {
+    width: 100%;
+    height: 100%;
+}
+
+#queue0 {
+    right: 10px;
+}
+
+#queue1 {
+    right: 70px;
+}
+
+#queue2 {
+    right: 130px;
+}
+
+#queue3 {
+    right: 190px;
+}
+
+#queue4 {
+    right: 250px;
+}
+
+#queue5 {
+    right: 310px;
+}
+
+.queue-bar {
+    position: absolute;
+    box-sizing: border-box;
+    width: 72px;
+    height: 20px;
+    top: 60px;
+    font-size: 12px;
+    color: white;
+    text-align: center;
+    border-style: solid;
+    border-width: 2px;
+    border-color: white;
+    border-radius: 2px;
+    background-color: rgb(0, 110, 255);
+}
+
+
+/*
+.food-menu-checkbox {
+    pointer-events: none;
+}
+*/
